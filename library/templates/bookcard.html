@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block main %}
+{% load static %}
+  
+<div id="displaybook" class="d-flex align-items-center flex-lg-row flex-sm-column m-4 p-4" hidden>
+  <div class="col-sm-4" style="min-width: 350px; max-width: 400px">
+      <img src="{{book.picture}}" class="img-fluid rounded" alt="...">
+  </div>
+  <div class="col-md-8 m-4">
+      <h1 class="card-title">{{book.name}}</h1>
+      <h2 class="card-auth">{{book.author}}</h2>
+      <p class="card-genre">{{book.genre}}</p>
+      <p class="card-publishing-year">{{book.publishing}} {{book.year}}</p>
+      {%if book.review%} 
+      <p class="card-review">Ваш отзыв: {{book.review}}</p>
+      {%endif%}
+      {%if book.rate%}
+      <p class="card-rate">Оценка: {{book.rate}}</p> 
+      {%endif%}
+      {%if book.read%}
+      <p class="card-read">Прочитано</p> 
+      {% else %}
+      <p class="card-read">Не прочитано</p> 
+      {%endif%}
+      <button type="submit" class="edit btn btn-success m-1">Редактировать книгу</button>
+      {%if not book.read%}
+      <button type="submit" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#modal_add_book">Добавить в прочитанное</button>
+      {%else%}
+      <button type="submit" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modal_add_book">Удалить из прочитанного</button>
+      {%endif%}
+      <button type="submit" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#modal_delete_book">Удалить книгу</button>
+  </div>
+</div>
+
+<div class="modal fade"  id="modal_delete_book" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Вы уверены, что хотите удалить книгу?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST">{% csrf_token %}
+        <input name="option" type="text" value="read" hidden>
+        <div class="modal-body">
+          <p class="">Книга полностью удалится отовсюду</p>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+            <a  href="{% url "delete" id=book.id%}" class="btn btn-danger m-1">Удалить книгу</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include "modal_addbook.html" with read=book.read %}
+
+<form method="POST" id="editbook" class="hidden flex-column" hidden>{% csrf_token %}
+    <input required name="option" type="text" value="edit" hidden>
+    <input required name="cover" type="url" value="{{book.picture}}" class="card-picture m-3"></input>
+    <input required name="name" type="text" value="{{book.name}}" class="card-title m-3"></input>
+    <input required name="author" type="text" value="{{book.author}}" class="card-author m-3"></input>
+    <select required name="genre" class="form-select m-3" aria-label="Default select example" value="{{book.genre}}" id="recipient-name">
+        <option value="Роман">Роман</option>
+        <option value="Повесть">Повесть</option>
+        <option value="История">История</option>
+        <option value="Фэнтези">Фэнтези</option>
+        <option value="Фантастика">Фантастика</option>
+        <option value="Детектив">Детектив</option>
+        <option value="Нон-фикшн">Нон-фикшн</option>
+        <option value="Русская классика">Русская классика</option>
+        <option value="Зарубежная классика">Зарубежная классика</option>
+        <option value="Драма">Драма</option>
+      </select>
+    <input required name="publisher" type="text" value="{{book.publishing}}" class="card-publishing m-3"></input>
+    <input required name="year" type="text" value="{{book.year}}" class="card-year m-3"></input>
+    {%if book.read%}
+    <input required name="review" type="text" value="{{book.review}}" class="card-review m-3"></input>
+    <select required class="form-select m-3" value="{{book.rate}}" aria-label="Default select example" name="rate" id="recipient-name">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    {%endif%}
+    <button type="submit" class="btn btn-success m-2">Сохранить</button>
+    <button type="button" class="cancel btn btn-success m-2">Выйти без изменений</button>
+</form>
+
+{% endblock main %}

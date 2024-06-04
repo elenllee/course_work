@@ -1,0 +1,40 @@
+<div class="modal fade"  id="modal_add_book" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">{% if read %}Удалить из прочитанного {% else %}Добавить в прочитанное {% endif %}</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form method="POST">{% csrf_token %}
+            {% if not read %}
+            <input name="option" type="text" value="read" hidden>
+            <div class="modal-body">
+              <div class="field">
+                <label for="recipient-name" class="field">Отзыв:</label>
+                <input required name="review" type="text" class="form-control" id="recipient-name">
+              </div>
+            <div class="field">
+                <label for="recipient-name" class="field">Ваша оценка книги:</label>
+                <select required class="form-select" aria-label="Default select example" name="rate" id="recipient-name">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+               </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Закрыть без сохранения</button>
+                <button type="submit" name="add" class="btn btn-success">Добавить</button>
+              </div>
+              {% else %}
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                <button type="submit" name="delete" class="btn btn-danger">Удалить</button>
+              </div>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+      </div>
+  </div>

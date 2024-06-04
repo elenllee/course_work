@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<div class="d-flex flex-wrap">
+{% for i in books %}
+{% include "card.html" with book=i  %}
+{% endfor %}
+</div>
+{% endblock %}
